@@ -1,22 +1,36 @@
 package br.tulio.projetospring.models;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public class People implements Serializable {
+@Entity
+@Table(name = "person")
+public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
+
+    @Column(nullable = false, length = 100)
     private String address;
+
+    @Column(name = "gender", nullable = false, length = 10)
     private String gender;
 
-    public People() {
+    public Person() {
     }
 
-    public People(long id, String firstName, String lastName, String address, String gender) {
+    public Person(long id, String firstName, String lastName, String address, String gender) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,8 +80,8 @@ public class People implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof People people)) return false;
-        return getId() == people.getId() && Objects.equals(getFirstName(), people.getFirstName()) && Objects.equals(getLastName(), people.getLastName()) && Objects.equals(getAddress(), people.getAddress()) && Objects.equals(getGender(), people.getGender());
+        if (!(o instanceof Person person)) return false;
+        return getId() == person.getId() && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
     }
 
     @Override

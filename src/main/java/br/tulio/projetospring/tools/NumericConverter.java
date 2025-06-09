@@ -1,12 +1,12 @@
 package br.tulio.projetospring.tools;
 
-import br.tulio.projetospring.exception.UnsuportedMathOperationException;
+import br.tulio.projetospring.exception.ResourceNotFoundException;
 
 public class NumericConverter {
 
-    public static Double convertToDouble(String value) throws UnsuportedMathOperationException {
+    public static Double convertToDouble(String value) throws ResourceNotFoundException {
 
-        if(value.isEmpty()) throw new UnsuportedMathOperationException("Error: Please set a valid numeric value");
+        if(value.isEmpty()) throw new ResourceNotFoundException("Error: Please set a valid numeric value");
 
         String number = value.replace(",", ".");
 
