@@ -1,7 +1,7 @@
 package br.tulio.projetospring.data.dto.v2;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 

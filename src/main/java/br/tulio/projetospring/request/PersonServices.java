@@ -3,6 +3,7 @@ package br.tulio.projetospring.request;
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
+import br.tulio.projetospring.mapper.custom.PersonMapper;
 import br.tulio.projetospring.models.Person;
 import br.tulio.projetospring.repository.PersonRepository;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class PersonServices {
 
     @Autowired
     private PersonRepository repository;
+
+    @Autowired
+    private PersonMapper personConverter;
 
     public PersonDTO findByID(Long id) {
         logger.info("Finding one person by ID...");
@@ -80,9 +84,10 @@ public class PersonServices {
     public PersonDTOV2 createV2(PersonDTOV2 person) {
         logger.info("Creating a person V2...");
 
-        var entity = parseObject(person, Person.class);
+        //o Dozer não iria funcionar aqui, então foi necessario criar um mapper customizado
+        var entity = personConverter.convertDTOToEntity(person);
 
-        return parseObject(repository.save(entity), PersonDTOV2.class);
+        return personConverter.convertEntityToDTO(repository.save(entity));
     }
 
 }
