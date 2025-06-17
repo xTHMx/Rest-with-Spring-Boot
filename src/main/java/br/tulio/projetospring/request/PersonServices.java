@@ -1,40 +1,49 @@
 package br.tulio.projetospring.request;
 
+import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
 import br.tulio.projetospring.models.Person;
 import br.tulio.projetospring.repository.PersonRepository;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+
+import static br.tulio.projetospring.mapper.ObjectMapper.parseListObjects;
+import static br.tulio.projetospring.mapper.ObjectMapper.parseObject;
 
 @Service
 public class PersonServices {
 
     private final AtomicLong counter = new AtomicLong();
 
-    private Logger logger = Logger.getLogger(PersonServices.class.getName());
+    private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
 
     @Autowired
     private PersonRepository repository;
 
-    public Person findByID(Long id) {
+    public PersonDTO findByID(Long id) {
         logger.info("Finding one person by ID...");
 
-        return repository.findById(id)
+        var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this Id"));
+
+        return parseObject(entity, PersonDTO.class);
     }
 
-    public Person create(Person person) {
+    public PersonDTO create(PersonDTO person) {
         logger.info("Creating a person...");
-        return repository.save(person);
+
+        var entity = parseObject(person, Person.class);
+
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person) {
+    public PersonDTO update(PersonDTO person) {
         logger.info("Updating a person...");
 
         //check if exists and gets it
@@ -47,7 +56,8 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return repository.save(person);
+
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id) {
@@ -60,10 +70,19 @@ public class PersonServices {
         repository.delete(entity);
     }
 
-    public List<Person> findAll(){
-        List<Person> people = new ArrayList<Person>();
+    public List<PersonDTO> findAll(){
+        return parseListObjects(repository.findAll(), PersonDTO.class);
+    }
 
-        return repository.findAll();
+
+    /// v2
+    // Somente para treino de versionamento
+    public PersonDTOV2 createV2(PersonDTOV2 person) {
+        logger.info("Creating a person V2...");
+
+        var entity = parseObject(person, Person.class);
+
+        return parseObject(repository.save(entity), PersonDTOV2.class);
     }
 
 }

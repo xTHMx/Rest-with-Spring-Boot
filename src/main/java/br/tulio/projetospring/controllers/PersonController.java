@@ -1,6 +1,7 @@
 package br.tulio.projetospring.controllers;
 
-import br.tulio.projetospring.models.Person;
+import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
 import br.tulio.projetospring.request.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,18 +22,18 @@ public class PersonController {
     //       produces = MediaType.APPLICATION_JSON_VALUE)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(@RequestBody Person person) { //@RequestBody faz retornar o body do request
+    public PersonDTO create(@RequestBody PersonDTO person) { //@RequestBody faz retornar o body do request
         return services.create(person);
     }
 
     //chama um endpoint com metodo get e retorna um json
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findByID(@PathVariable("id") Long id) {
+    public PersonDTO findByID(@PathVariable("id") Long id) {
         return services.findByID(id);
     }
 
     @PutMapping( consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(@RequestBody Person person) { //requestbody faz retornar o body do request
+    public PersonDTO update(@RequestBody PersonDTO person) { //requestbody faz retornar o body do request
         return services.update(person);
     }
 
@@ -43,7 +44,15 @@ public class PersonController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
         return services.findAll();
+    }
+
+    /// V2
+    // Somente para treinar o uso de versionamento
+    @PostMapping(value = "/v2", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonDTOV2 create(@RequestBody PersonDTOV2 person) { //@RequestBody faz retornar o body do request
+        return services.createV2(person);
     }
 }

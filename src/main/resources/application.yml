@@ -14,3 +14,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: false
     open-in-view: false
+  logging:
+      level:
+        root: WARN #- Somente exibe logs de warn em pacotes root
+        br.tulio.projetospring: DEBUG #Exibe todos os logs dos pacotes de br.tulio.projetospring
