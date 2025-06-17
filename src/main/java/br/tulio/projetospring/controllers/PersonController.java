@@ -2,7 +2,7 @@ package br.tulio.projetospring.controllers;
 
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
-import br.tulio.projetospring.request.PersonServices;
+import br.tulio.projetospring.services.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -1,16 +1,31 @@
 package br.tulio.projetospring.data.dto.v1;
 
+import br.tulio.projetospring.tools.serializers.GenderSerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+
+@JsonPropertyOrder({"id", "first_name", "last_name", "gender", "address"}) //ajusta a ordem dos dados no json e os nomes
 public class PersonDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private long id;
+
+    @JsonProperty("first_name") //altera o nome do dado no json
     private String firstName;
+
+    @JsonProperty("last_name")
     private String lastName;
+
     private String address;
+
+    @JsonSerialize(using = GenderSerializer.class)
     private String gender;
 
     public PersonDTO() {

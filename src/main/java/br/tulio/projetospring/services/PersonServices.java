@@ -1,4 +1,4 @@
-package br.tulio.projetospring.request;
+package br.tulio.projetospring.services;
 
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
