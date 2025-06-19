@@ -8,10 +8,10 @@ spring:
     password: 47190Tulio
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: #org.hibernate.dialect.MySQLDialect - já adiciona sozinho quando vazio
     show-sql: false
     open-in-view: false
   logging:

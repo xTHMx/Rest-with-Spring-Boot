@@ -12,6 +12,17 @@ public class GenderSerializer extends JsonSerializer<String> {
     public void serialize(String gender, JsonGenerator gen, SerializerProvider provider)
             throws IOException, JsonProcessingException {
 
-        String formatedString = "Macho".equals(gender) ? "M" : "F";
+        String formatedString;
+
+        if(gender.equals("Macho") || gender.equals("Masculino")){
+            formatedString = "M";
+        }
+        else{
+            formatedString = "F";
+        }
+
+        //escreve o resultado para enviar --- sem isso causava o erro Could not write JSON: Can not write a field name, expecting a value
+        gen.writeString(formatedString);
+
     }
 }

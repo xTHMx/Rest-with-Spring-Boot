@@ -15,6 +15,7 @@ public class PersonDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @JsonProperty("id")
     private long id;
 
     @JsonProperty("first_name") //altera o nome do dado no json
