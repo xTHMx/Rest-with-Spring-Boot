@@ -20,19 +20,24 @@ public class PersonController {
     //quando não houver valor no mapping, é o metodo default (/person) que sera chamado
     //@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,          *Não se usa mais (Legado)
     //       produces = MediaType.APPLICATION_JSON_VALUE)
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
     public PersonDTO create(@RequestBody PersonDTO person) { //@RequestBody faz retornar o body do request
         return services.create(person);
     }
 
     //chama um endpoint com metodo get e retorna um json
-    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
     public PersonDTO findByID(@PathVariable("id") Long id) {
         return services.findByID(id);
     }
 
-    @PutMapping( consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PutMapping( consumes ={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
     public PersonDTO update(@RequestBody PersonDTO person) { //requestbody faz retornar o body do request
         return services.update(person);
     }
@@ -43,7 +48,9 @@ public class PersonController {
         return ResponseEntity.noContent().build(); //retorna o status correto (204)
     }
 
-    @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/all",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
     public List<PersonDTO> findAll() {
         return services.findAll();
     }
@@ -51,7 +58,8 @@ public class PersonController {
     /// V2
     // Somente para treinar o uso de versionamento
     @PostMapping(value = "/v2", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
     public PersonDTOV2 create(@RequestBody PersonDTOV2 person) { //@RequestBody faz retornar o body do request
         return services.createV2(person);
     }

@@ -32,7 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .useRegisteredExtensionsOnly(false)
                 .defaultContentType(MediaType.APPLICATION_JSON)
                     .mediaType("xml", MediaType.APPLICATION_XML)
-                    .mediaType("json", MediaType.APPLICATION_JSON);
+                    .mediaType("json", MediaType.APPLICATION_JSON)
+                    .mediaType("yaml", MediaType.APPLICATION_YAML);
 
     }
 }
