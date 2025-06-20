@@ -20,12 +20,14 @@ public class PersonController {
     //quando não houver valor no mapping, é o metodo default (/person) que sera chamado
     //@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,          *Não se usa mais (Legado)
     //       produces = MediaType.APPLICATION_JSON_VALUE)
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
     public PersonDTO create(@RequestBody PersonDTO person) { //@RequestBody faz retornar o body do request
         return services.create(person);
     }
+
 
     //chama um endpoint com metodo get e retorna um json
     @GetMapping(value = "/{id}",
@@ -35,6 +37,7 @@ public class PersonController {
         return services.findByID(id);
     }
 
+
     @PutMapping( consumes ={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
@@ -42,11 +45,13 @@ public class PersonController {
         return services.update(person);
     }
 
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) { //requestbody faz retornar o body do request
         services.delete(id);
         return ResponseEntity.noContent().build(); //retorna o status correto (204)
     }
+
 
     @GetMapping(value = "/all",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
@@ -54,6 +59,7 @@ public class PersonController {
     public List<PersonDTO> findAll() {
         return services.findAll();
     }
+
 
     /// V2
     // Somente para treinar o uso de versionamento

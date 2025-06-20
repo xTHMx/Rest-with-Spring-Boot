@@ -4,24 +4,22 @@ import br.tulio.projetospring.tools.serializers.GenderSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 
-@JsonPropertyOrder({"id", "first_name", "last_name", "gender", "address"}) //ajusta a ordem dos dados no json e os nomes
-public class PersonDTO implements Serializable {
+@JsonPropertyOrder({"id", "firstName", "lastName", "gender", "address"}) //ajusta a ordem dos dados no json e os nomes
+public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
     private long id;
 
-    @JsonProperty("first_name") //altera o nome do dado no json
     private String firstName;
 
-    @JsonProperty("last_name")
     private String lastName;
 
     private String address;

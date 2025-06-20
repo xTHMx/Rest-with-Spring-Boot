@@ -1,5 +1,6 @@
 package br.tulio.projetospring.services;
 
+import br.tulio.projetospring.controllers.PersonController;
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 
 import static br.tulio.projetospring.mapper.ObjectMapper.parseListObjects;
 import static br.tulio.projetospring.mapper.ObjectMapper.parseObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class PersonServices {
@@ -36,7 +39,10 @@ public class PersonServices {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this Id"));
 
-        return parseObject(entity, PersonDTO.class);
+        var dto = parseObject(entity, PersonDTO.class);
+        addHateoasLinks(dto);
+
+        return dto;
     }
 
     public PersonDTO create(PersonDTO person) {
@@ -44,7 +50,10 @@ public class PersonServices {
 
         var entity = parseObject(person, Person.class);
 
-        return parseObject(repository.save(entity), PersonDTO.class);
+        var dto = parseObject(repository.save(entity), PersonDTO.class);
+        addHateoasLinks(dto);
+
+        return dto;
     }
 
     public PersonDTO update(PersonDTO person) {
@@ -60,8 +69,10 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
+        var dto = parseObject(repository.save(entity), PersonDTO.class);
+        addHateoasLinks(dto);
 
-        return parseObject(repository.save(entity), PersonDTO.class);
+        return dto;
     }
 
     public void delete(Long id) {
@@ -75,7 +86,12 @@ public class PersonServices {
     }
 
     public List<PersonDTO> findAll(){
-        return parseListObjects(repository.findAll(), PersonDTO.class);
+        logger.info("Finding all people...");
+
+        var people = parseListObjects(repository.findAll(), PersonDTO.class);
+        people.forEach(this::addHateoasLinks); //add links for each obj of list -> could also be (i -> addHateoas(i)) instead
+
+        return people;
     }
 
 
@@ -88,6 +104,20 @@ public class PersonServices {
         var entity = personConverter.convertDTOToEntity(person);
 
         return personConverter.convertEntityToDTO(repository.save(entity));
+    }
+
+
+    /// HATEOAS
+    private void addHateoasLinks(PersonDTO dto) {
+        //link GET verb
+        dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withSelfRel().withType("GET")); //withSelfRel() diz que referencia o mesmo endpoint
+        dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withRel("findAll").withType("GET"));
+        //link DELETE verb
+        dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
+        //link POST verb
+        dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
+        //link PUT verb
+        dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
     }
 
 }
