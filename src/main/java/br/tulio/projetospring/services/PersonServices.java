@@ -3,6 +3,7 @@ package br.tulio.projetospring.services;
 import br.tulio.projetospring.controllers.PersonController;
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
+import br.tulio.projetospring.exception.RequiredObjectIsNullException;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
 import br.tulio.projetospring.mapper.custom.PersonMapper;
 import br.tulio.projetospring.models.Person;
@@ -22,8 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class PersonServices {
-
-    private final AtomicLong counter = new AtomicLong();
 
     private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
 
@@ -48,6 +47,8 @@ public class PersonServices {
     public PersonDTO create(PersonDTO person) {
         logger.info("Creating a person...");
 
+        if(person == null) throw new RequiredObjectIsNullException(); //não pode ser nulo
+
         var entity = parseObject(person, Person.class);
 
         var dto = parseObject(repository.save(entity), PersonDTO.class);
@@ -58,6 +59,8 @@ public class PersonServices {
 
     public PersonDTO update(PersonDTO person) {
         logger.info("Updating a person...");
+
+        if(person == null) throw new RequiredObjectIsNullException(); //não pode ser nulo
 
         //check if exists and gets it
         Person entity = repository.findById(person.getId())
