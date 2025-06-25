@@ -18,3 +18,7 @@ spring:
       level:
         root: WARN #- Somente exibe logs de warn em pacotes root
         br.tulio.projetospring: DEBUG #Exibe todos os logs dos pacotes de br.tulio.projetospring
+  spring-doc:
+    paths-to-match: /api/**/v1/**
+    swagger-ui:
+      use-root-path: true
