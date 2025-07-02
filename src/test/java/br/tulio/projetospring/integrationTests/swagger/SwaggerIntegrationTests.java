@@ -1,7 +1,7 @@
-package br.tulio.projetospring.integrationTests.containers.swagger;
+package br.tulio.projetospring.integrationTests.swagger;
 
 import br.tulio.projetospring.configs.TestConfigs;
-import br.tulio.projetospring.integrationTests.containers.AbstractIntegrationTest;
+import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,7 +15,7 @@ class SwaggerIntegrationTests extends AbstractIntegrationTest {
 	void shouldDisplaySwaggerUIPage() {
 		var content = given()
 						.basePath("/swagger-ui/index.html")
-							.port(TestConfigs.serverPort)
+							.port(TestConfigs.SERVER_PORT)
 						.when()
 							.get()
 						.then()

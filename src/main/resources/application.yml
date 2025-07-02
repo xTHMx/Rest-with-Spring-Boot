@@ -1,3 +1,5 @@
+cors: #Config global do CORS - Propriedade manufaturada
+  originPatterns: http://localhost:8080, http://localhost:3000
 spring:
   application:
     name : demo

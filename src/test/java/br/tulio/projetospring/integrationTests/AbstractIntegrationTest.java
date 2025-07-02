@@ -1,4 +1,4 @@
-package br.tulio.projetospring.integrationTests.containers;
+package br.tulio.projetospring.integrationTests;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;

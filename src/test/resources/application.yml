@@ -1,5 +1,7 @@
 server:         # Não se esqueça que essa parte é fora da seção do Spring
   port: 8888
+cors:
+  originPatterns: http://localhost:8080, http://localhost:3000
 spring:
   application:
     name : demo
