@@ -8,12 +8,12 @@ import br.tulio.projetospring.exception.ResourceNotFoundException;
 import br.tulio.projetospring.mapper.custom.PersonMapper;
 import br.tulio.projetospring.models.Person;
 import br.tulio.projetospring.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 
 import static br.tulio.projetospring.mapper.ObjectMapper.parseListObjects;
@@ -88,6 +88,24 @@ public class PersonServices {
         repository.delete(entity);
     }
 
+    @Transactional //infoma ao spring para usar os conceitos ACED - Atomicidade para evitar colisão de dados e corrupção dos mesmos
+    public PersonDTO disablePerson(Long id) {
+        logger.info("Disabling a person...");
+
+
+        repository.findById(id) //vai pegar o valor da tabela e jogar na cache
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this Id"));
+
+        repository.disablePerson(id);
+
+        var entity = repository.findById(id).get(); //vai pegar o valor já na cache -> hibernate tem cache L2 -> precisa limpar pelo @Modifying
+
+        var dto = parseObject(entity, PersonDTO.class);
+        addHateoasLinks(dto);
+
+        return dto;
+    }
+
     public List<PersonDTO> findAll(){
         logger.info("Finding all people...");
 
@@ -121,6 +139,8 @@ public class PersonServices {
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
         //link PUT verb
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
+        //link PUT verb
+        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("disable").withType("PATCH"));
     }
 
 }
