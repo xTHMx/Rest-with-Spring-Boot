@@ -1,7 +1,7 @@
 server:         # Não se esqueça que essa parte é fora da seção do Spring
   port: 8888
 cors:
-  originPatterns: http://localhost:8080, http://localhost:3000
+  originPatterns: http://localhost:8888,http://localhost:3000
 spring:
   application:
     name : demo
@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update #Não usar o 'update' em produção -> 'none'
     properties:
       hibernate:
         dialect: #org.hibernate.dialect.MySQLDialect - já adiciona sozinho quando vazio
@@ -20,6 +20,5 @@ spring:
       root: WARN #- Somente exibe logs de warn em pacotes root
       br.tulio.projetospring: DEBUG #Exibe todos os logs dos pacotes de br.tulio.projetospring
   spring-doc:
-    paths-to-match: /api/**/v1/**
     swagger-ui:
       use-root-path: true

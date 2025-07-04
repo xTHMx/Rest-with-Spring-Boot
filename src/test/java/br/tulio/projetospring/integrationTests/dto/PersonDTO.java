@@ -1,7 +1,9 @@
 package br.tulio.projetospring.integrationTests.dto;
 
+
 import java.io.Serializable;
 import java.util.Objects;
+
 
 public class PersonDTO implements Serializable {
 

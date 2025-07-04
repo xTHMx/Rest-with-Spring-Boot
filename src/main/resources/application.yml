@@ -1,5 +1,5 @@
 cors: #Config global do CORS - Propriedade manufaturada
-  originPatterns: http://localhost:8080, http://localhost:3000
+  originPatterns: http://localhost:8080,http://localhost:3000
 spring:
   application:
     name : demo
@@ -10,7 +10,7 @@ spring:
     password: 47190Tulio
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: none #Não usar o 'update' em produção
     properties:
       hibernate:
         dialect: #org.hibernate.dialect.MySQLDialect - já adiciona sozinho quando vazio
@@ -21,6 +21,6 @@ spring:
         root: WARN #- Somente exibe logs de warn em pacotes root
         br.tulio.projetospring: DEBUG #Exibe todos os logs dos pacotes de br.tulio.projetospring
   spring-doc:
-    paths-to-match: /api/**/v1/**
+    #paths-to-match: /api/**/v1/**
     swagger-ui:
       use-root-path: true

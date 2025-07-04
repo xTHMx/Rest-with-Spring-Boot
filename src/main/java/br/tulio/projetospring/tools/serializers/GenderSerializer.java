@@ -14,7 +14,7 @@ public class GenderSerializer extends JsonSerializer<String> {
 
         String formatedString;
 
-        if(gender.equals("Macho") || gender.equals("Masculino")){
+        if(gender.equals("Macho") || gender.equals("Masculino") || gender.equals("Male")){
             formatedString = "M";
         }
         else{
