@@ -15,7 +15,8 @@ import java.util.stream.Stream;
 public class AbstractIntegrationTest {
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:9.1.0");
+        static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:9.1.0")
+                .withDatabaseName("projeto_spring"); //flyway não acha o banco de dados se não passar o nome nos testes -> usuario teste n tem permissao
 
         private void startContainers() {
             //inicia todos os conteiners de forma segura e paralela

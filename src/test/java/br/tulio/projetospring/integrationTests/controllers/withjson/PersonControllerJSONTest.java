@@ -21,7 +21,7 @@ import static junit.framework.TestCase.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerTest extends AbstractIntegrationTest {
+class PersonControllerJSONTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
@@ -38,7 +38,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
 
     @Test
     @Order(1)
-    void create() throws JsonProcessingException {
+    void createTest() throws JsonProcessingException {
         mockPerson(); //passa dados ao person criado no setUp()
 
         specification = new RequestSpecBuilder()
@@ -74,56 +74,21 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("Manacero", createdPerson.getLastName());
         assertEquals("São José do Rio Preto", createdPerson.getAddress());
         assertEquals("M", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
 
 
     }
 
     @Test
     @Order(2)
-    void createWithInvalidOrigin() {
-        mockPerson(); //passa dados ao person criado no setUp()
-
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.INVALID_ORIGIN)
-                .setBasePath("/people")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
+    void updateTest() throws JsonProcessingException {
+        person.setLastName("Manacero jr.");
 
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
-                .body(person)                                  //header param
+                .body(person)                            //header param
                 .when()
-                    .post()
-                .then()
-                    .statusCode(403)
-                .extract()
-                    .body().asString();
-
-        assertEquals("Invalid CORS request", content);
-
-    }
-
-    @Test
-    @Order(3)
-    void findByID() throws JsonProcessingException {
-        //não precisa do mock pois foi criado anteriormente
-        //por isso existe uma ordem
-
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.VALID_ORIGIN)
-                .setBasePath("/people")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
-
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
-                .pathParams("id", person.getId())                             //header param
-                .when()
-                    .get("{id}")
+                    .put()
                 .then()
                     .statusCode(200)
                 .extract()
@@ -133,29 +98,25 @@ class PersonControllerTest extends AbstractIntegrationTest {
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
-        assertNotNull(createdPerson.getFirstName());
-        assertNotNull(createdPerson.getLastName());
-        assertNotNull(createdPerson.getAddress());
-        assertNotNull(createdPerson.getGender());
+        //outros removidos por ser redundande -> lembre-se da sequencia dos testes
 
         assertTrue(createdPerson.getId() > 0);
 
         assertEquals("Aleardo", createdPerson.getFirstName());
-        assertEquals("Manacero", createdPerson.getLastName());
+        assertEquals("Manacero jr.", createdPerson.getLastName());
         assertEquals("São José do Rio Preto", createdPerson.getAddress());
         assertEquals("M", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
+
     }
 
     @Test
     @Order(3)
-    void findByIDWithInvalidOrigin() {
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.INVALID_ORIGIN)
-                .setBasePath("/people")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
+    void findByIDTest() throws JsonProcessingException {
+        //não precisa do mock pois foi criado anteriormente
+        //por isso existe uma ordem
+
+        //Não precisa de outra 'specification' já que n tem CORS e n vai alterar nada
 
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
@@ -163,26 +124,32 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .when()
                 .get("{id}")
                 .then()
-                .statusCode(403)
+                .statusCode(200)
                 .extract()
                 .body().asString();
 
-        assertEquals("Invalid CORS request", content);
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        person = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        //outros removidos por ser redundande
+
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("Aleardo", createdPerson.getFirstName());
+        assertEquals("Manacero jr.", createdPerson.getLastName());
+        assertEquals("São José do Rio Preto", createdPerson.getAddress());
+        assertEquals("M", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
 
     }
-
-    /*
-    @Test
-    void update() {
-    }
-    //outros foram removidos
-    */
 
     private void mockPerson() {
         person.setFirstName("Aleardo");
         person.setLastName("Manacero");
         person.setAddress("São José do Rio Preto");
         person.setGender("Male");
+        person.setEnabled(true);
     }
 
 }

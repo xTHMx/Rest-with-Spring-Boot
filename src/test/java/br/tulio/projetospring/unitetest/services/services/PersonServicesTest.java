@@ -59,7 +59,7 @@ class PersonServicesTest {
         //test GET link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("self")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("GET")
                 )
         );
@@ -67,7 +67,7 @@ class PersonServicesTest {
         //test POST link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("create")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("POST")
                 )
         );
@@ -75,7 +75,7 @@ class PersonServicesTest {
         //test PUT link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("update")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("PUT")
                 )
         );
@@ -83,7 +83,7 @@ class PersonServicesTest {
         //test DELETE link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("delete")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("DELETE")
                 )
         );
@@ -91,7 +91,7 @@ class PersonServicesTest {
         //test All GET Link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("findAll")
-                        && link.getHref().endsWith("/api/people/all")
+                        && link.getHref().endsWith("/people/all")
                         && link.getType().equals("GET")
                 )
         );
@@ -124,7 +124,7 @@ class PersonServicesTest {
         //test GET link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("self")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("GET")
                 )
         );
@@ -132,7 +132,7 @@ class PersonServicesTest {
         //test POST link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("create")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("POST")
                 )
         );
@@ -140,7 +140,7 @@ class PersonServicesTest {
         //test PUT link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("update")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("PUT")
                 )
         );
@@ -148,7 +148,7 @@ class PersonServicesTest {
         //test DELETE link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("delete")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("DELETE")
                 )
         );
@@ -156,7 +156,7 @@ class PersonServicesTest {
         //test All GET Link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("findAll")
-                        && link.getHref().endsWith("/api/people/all")
+                        && link.getHref().endsWith("/people/all")
                         && link.getType().equals("GET")
                 )
         );
@@ -205,7 +205,7 @@ class PersonServicesTest {
         //test GET link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("self")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("GET")
                 )
         );
@@ -213,7 +213,7 @@ class PersonServicesTest {
         //test POST link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("create")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("POST")
                 )
         );
@@ -221,7 +221,7 @@ class PersonServicesTest {
         //test PUT link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("update")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("PUT")
                 )
         );
@@ -229,7 +229,7 @@ class PersonServicesTest {
         //test DELETE link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("delete")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("DELETE")
                 )
         );
@@ -237,7 +237,7 @@ class PersonServicesTest {
         //test All GET Link
         assertNotNull(result.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("findAll")
-                        && link.getHref().endsWith("/api/people/all")
+                        && link.getHref().endsWith("/people/all")
                         && link.getType().equals("GET")
                 )
         );
@@ -294,7 +294,7 @@ class PersonServicesTest {
         //test GET link
         assertNotNull(person1.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("self")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("GET")
                 )
         );
@@ -302,7 +302,7 @@ class PersonServicesTest {
         //test POST link
         assertNotNull(person1.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("create")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("POST")
                 )
         );
@@ -310,7 +310,7 @@ class PersonServicesTest {
         //test PUT link
         assertNotNull(person1.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("update")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("PUT")
                 )
         );
@@ -318,7 +318,7 @@ class PersonServicesTest {
         //test DELETE link
         assertNotNull(person1.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("delete")
-                        && link.getHref().endsWith("/api/people/1")
+                        && link.getHref().endsWith("/people/1")
                         && link.getType().equals("DELETE")
                 )
         );
@@ -326,7 +326,7 @@ class PersonServicesTest {
         //test All GET Link
         assertNotNull(person1.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("findAll")
-                        && link.getHref().endsWith("/api/people/all")
+                        && link.getHref().endsWith("/people/all")
                         && link.getType().equals("GET")
                 )
         );
@@ -346,7 +346,7 @@ class PersonServicesTest {
         //test GET link
         assertNotNull(person5.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("self")
-                        && link.getHref().endsWith("/api/people/5")
+                        && link.getHref().endsWith("/people/5")
                         && link.getType().equals("GET")
                 )
         );
@@ -354,7 +354,7 @@ class PersonServicesTest {
         //test POST link
         assertNotNull(person5.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("create")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("POST")
                 )
         );
@@ -362,7 +362,7 @@ class PersonServicesTest {
         //test PUT link
         assertNotNull(person5.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("update")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("PUT")
                 )
         );
@@ -370,7 +370,7 @@ class PersonServicesTest {
         //test DELETE link
         assertNotNull(person5.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("delete")
-                        && link.getHref().endsWith("/api/people/5")
+                        && link.getHref().endsWith("/people/5")
                         && link.getType().equals("DELETE")
                 )
         );
@@ -378,7 +378,7 @@ class PersonServicesTest {
         //test All GET Link
         assertNotNull(person5.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("findAll")
-                        && link.getHref().endsWith("/api/people/all")
+                        && link.getHref().endsWith("/people/all")
                         && link.getType().equals("GET")
                 )
         );
@@ -398,7 +398,7 @@ class PersonServicesTest {
         //test GET link
         assertNotNull(person10.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("self")
-                        && link.getHref().endsWith("/api/people/10")
+                        && link.getHref().endsWith("/people/10")
                         && link.getType().equals("GET")
                 )
         );
@@ -406,7 +406,7 @@ class PersonServicesTest {
         //test POST link
         assertNotNull(person10.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("create")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("POST")
                 )
         );
@@ -414,7 +414,7 @@ class PersonServicesTest {
         //test PUT link
         assertNotNull(person10.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("update")
-                        && link.getHref().endsWith("/api/people")
+                        && link.getHref().endsWith("/people")
                         && link.getType().equals("PUT")
                 )
         );
@@ -422,7 +422,7 @@ class PersonServicesTest {
         //test DELETE link
         assertNotNull(person10.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("delete")
-                        && link.getHref().endsWith("/api/people/10")
+                        && link.getHref().endsWith("/people/10")
                         && link.getType().equals("DELETE")
                 )
         );
@@ -430,7 +430,7 @@ class PersonServicesTest {
         //test All GET Link
         assertNotNull(person10.getLinks().stream()
                 .anyMatch(link -> link.getRel().value().equals("findAll")
-                        && link.getHref().endsWith("/api/people/all")
+                        && link.getHref().endsWith("/people/all")
                         && link.getType().equals("GET")
                 )
         );
