@@ -1,9 +1,10 @@
-package br.tulio.projetospring.integrationTests.controllers.withjson;
+package br.tulio.projetospring.integrationTests.controllers;
 
 import br.tulio.projetospring.configs.TestConfigs;
 import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
 import br.tulio.projetospring.integrationTests.dto.PersonDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.RequestSpecBuilder;
@@ -14,6 +15,8 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.*;
@@ -56,6 +59,7 @@ class PersonControllerJSONTest extends AbstractIntegrationTest {
                     .post()
                 .then()
                     .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
                     .body().asString();
 
@@ -86,11 +90,13 @@ class PersonControllerJSONTest extends AbstractIntegrationTest {
 
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
+                .accept(MediaType.APPLICATION_JSON_VALUE)      //Header param para receber em JSON
                 .body(person)                            //header param
                 .when()
                     .put()
                 .then()
                     .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
                     .body().asString();
 
@@ -120,13 +126,15 @@ class PersonControllerJSONTest extends AbstractIntegrationTest {
 
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
+                .accept(MediaType.APPLICATION_JSON_VALUE)      //Header param para receber em JSON
                 .pathParams("id", person.getId())                             //header param
                 .when()
-                .get("{id}")
+                    .get("{id}")
                 .then()
-                .statusCode(200)
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
-                .body().asString();
+                    .body().asString();
 
         PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
@@ -141,6 +149,109 @@ class PersonControllerJSONTest extends AbstractIntegrationTest {
         assertEquals("São José do Rio Preto", createdPerson.getAddress());
         assertEquals("M", createdPerson.getGender());
         assertTrue(createdPerson.getEnabled());
+
+    }
+
+    @Test
+    @Order(4)
+    void disableTest() throws JsonProcessingException {
+
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE)      //Header param para receber em JSON
+                .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
+                .pathParams("id", person.getId())                             //header param
+                .when()
+                    .patch("{id}")
+                .then()
+                    .statusCode(200)
+                .extract()
+                    .body().asString();
+
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        person = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        //outros removidos por ser redundande
+
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("Aleardo", createdPerson.getFirstName());
+        assertEquals("Manacero jr.", createdPerson.getLastName());
+        assertEquals("São José do Rio Preto", createdPerson.getAddress());
+        assertEquals("M", createdPerson.getGender());
+        assertFalse(createdPerson.getEnabled());
+
+    }
+
+    @Test
+    @Order(5)
+    void deleteTest() throws JsonProcessingException {
+
+        given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE)      //Header param para receber em JSON
+                .pathParams("id", person.getId())                             //header param
+                .when()
+                    .delete("{id}")
+                .then()
+                    .statusCode(204);
+
+
+    }
+
+    @Test
+    @Order(6)
+    void findAllTest() throws JsonProcessingException {
+
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE) //Header param
+                .when()
+                    .get("/all")
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                    .body().asString();
+
+        List<PersonDTO> people = objectMapper.readValue(content, new TypeReference<List<PersonDTO>>(){});
+
+        //primeira pessoa da lista
+        PersonDTO firstPerson = people.getFirst();
+        person = firstPerson;
+
+        assertNotNull(firstPerson.getId());
+        assertTrue(firstPerson.getId() > 0);
+
+        assertEquals("John", firstPerson.getFirstName());
+        assertEquals("Doe", firstPerson.getLastName());
+        assertEquals("Rua Benedito, 14", firstPerson.getAddress());
+        assertEquals("M", firstPerson.getGender());
+        assertTrue(firstPerson.getEnabled());
+
+        //quarta pessoa
+        PersonDTO thirdPerson = people.get(2);
+        person = thirdPerson;
+
+        assertNotNull(thirdPerson.getId());
+        assertTrue(thirdPerson.getId() > 0);
+
+        assertEquals("Albert", thirdPerson.getFirstName());
+        assertEquals("Eintein", thirdPerson.getLastName());
+        assertEquals("Alexandria, bairro nobre, 223", thirdPerson.getAddress());
+        assertEquals("M", thirdPerson.getGender());
+        assertTrue(thirdPerson.getEnabled());
+
+        //sexta pessoa
+        PersonDTO fifthPerson = people.get(4);
+        person = fifthPerson;
+
+        assertNotNull(fifthPerson.getId());
+        assertTrue(fifthPerson.getId() > 0);
+
+        assertEquals("Albert", fifthPerson.getFirstName());
+        assertEquals("Eintein", fifthPerson.getLastName());
+        assertEquals("Alexandria, bairro nobre, 223", fifthPerson.getAddress());
+        assertEquals("M", fifthPerson.getGender());
+        assertTrue(fifthPerson.getEnabled());
 
     }
 

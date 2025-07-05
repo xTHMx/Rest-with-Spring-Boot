@@ -1,4 +1,4 @@
-package br.tulio.projetospring.integrationTests.controllers.withjson;
+package br.tulio.projetospring.integrationTests.controllers;
 
 import br.tulio.projetospring.configs.TestConfigs;
 import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
