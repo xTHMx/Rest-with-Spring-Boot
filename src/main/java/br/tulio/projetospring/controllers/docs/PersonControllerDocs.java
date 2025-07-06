@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -105,7 +106,11 @@ public interface PersonControllerDocs {
 
             }
     )
-    List<PersonDTO> findAll();
+    ResponseEntity<Page<PersonDTO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page, //Pagina da pesquisa
+            @RequestParam(value = "size", defaultValue = "10") Integer size, //Tamanho de instancias por pagina
+            @RequestParam(value = "direction", defaultValue = "asc") String direction //Pesquisa de forma ascendente ou descendente
+    );
 
     @Operation(summary = "Adds a New Person with V2 values",
             description = "Adds a new person by passing a JSON, XML or YAML with its data. Uses V2 DTO model", tags = {"People"},

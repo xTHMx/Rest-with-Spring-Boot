@@ -11,6 +11,8 @@ import br.tulio.projetospring.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -106,13 +108,19 @@ public class PersonServices {
         return dto;
     }
 
-    public List<PersonDTO> findAll(){
+    public Page<PersonDTO> findAll(Pageable pageable) {
         logger.info("Finding all people...");
 
-        var people = parseListObjects(repository.findAll(), PersonDTO.class);
-        people.forEach(this::addHateoasLinks); //add links for each obj of list -> could also be (i -> addHateoas(i)) instead
+        var foundPeople = repository.findAll(pageable);
 
-        return people;
+        var peopleWithLinks = foundPeople.map(
+                person -> {
+                    var dto = parseObject(person, PersonDTO.class);
+                    addHateoasLinks(dto);
+                    return dto;
+                });
+
+        return peopleWithLinks;
     }
 
 
@@ -132,7 +140,7 @@ public class PersonServices {
     private void addHateoasLinks(PersonDTO dto) {
         //link GET verb
         dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withSelfRel().withType("GET")); //withSelfRel() diz que referencia o mesmo endpoint
-        dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findAll(1, 10, "desc")).withRel("findAll").withType("GET"));
         //link DELETE verb
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
         //link POST verb

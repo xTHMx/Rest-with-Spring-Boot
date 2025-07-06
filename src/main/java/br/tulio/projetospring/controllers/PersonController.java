@@ -11,6 +11,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,8 +85,14 @@ public class PersonController implements PersonControllerDocs {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
     @Override
-    public List<PersonDTO> findAll() {
-        return services.findAll();
+    public ResponseEntity<Page<PersonDTO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page, //Pagina da pesquisa
+            @RequestParam(value = "size", defaultValue = "10") Integer size, //Tamanho de instancias por pagina
+            @RequestParam(value = "direction", defaultValue = "asc") String direction //Consulta retorna de forma ascendente ou descendente baseado em um paramentro
+    ){
+        Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName")); //Sort.by() faz com que o retorno seja ordenado baseado no firsrt name -> ordena primeiro TODOS antes de pegar por pagina
+        return ResponseEntity.ok(services.findAll(pageable));
     }
 
 
