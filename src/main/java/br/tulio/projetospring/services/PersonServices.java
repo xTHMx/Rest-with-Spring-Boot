@@ -11,14 +11,16 @@ import br.tulio.projetospring.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import org.slf4j.Logger;
 
-import static br.tulio.projetospring.mapper.ObjectMapper.parseListObjects;
 import static br.tulio.projetospring.mapper.ObjectMapper.parseObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -33,6 +35,9 @@ public class PersonServices {
 
     @Autowired
     private PersonMapper personConverter;
+
+    @Autowired
+    private PagedResourcesAssembler<PersonDTO> pagedAssembler;
 
     public PersonDTO findByID(Long id) {
         logger.info("Finding one person by ID...");
@@ -108,7 +113,7 @@ public class PersonServices {
         return dto;
     }
 
-    public Page<PersonDTO> findAll(Pageable pageable) {
+    public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("Finding all people...");
 
         var foundPeople = repository.findAll(pageable);
@@ -120,7 +125,38 @@ public class PersonServices {
                     return dto;
                 });
 
-        return peopleWithLinks;
+        //Adicionando links HAL(_links e _embedded) para complementar o HATEOAS
+        Link findAllLink = WebMvcLinkBuilder.linkTo(        //adiciona links adicionais do HAL 'bindando' na função findAll()
+                WebMvcLinkBuilder.methodOn(PersonController.class)
+                        .findAll(pageable.getPageNumber(),
+                                pageable.getPageSize(),
+                                String.valueOf(pageable.getSort())))
+                        .withSelfRel();
+
+        return pagedAssembler.toModel(peopleWithLinks, findAllLink);
+    }
+
+    public PagedModel<EntityModel<PersonDTO>> findByName(String firstName, Pageable pageable) {
+        logger.info("Finding all people...");
+
+        var foundPeople = repository.findPeopleByName(firstName, pageable);
+
+        var peopleWithLinks = foundPeople.map(
+                person -> {
+                    var dto = parseObject(person, PersonDTO.class);
+                    addHateoasLinks(dto);
+                    return dto;
+                });
+
+        //Adicionando links HAL(_links e _embedded) para complementar o HATEOAS
+        Link findAllLink = WebMvcLinkBuilder.linkTo(        //adiciona links adicionais do HAL 'bindando' na função findAll()
+                        WebMvcLinkBuilder.methodOn(PersonController.class)
+                                .findAll(pageable.getPageNumber(),
+                                        pageable.getPageSize(),
+                                        String.valueOf(pageable.getSort())))
+                .withSelfRel();
+
+        return pagedAssembler.toModel(peopleWithLinks, findAllLink);
     }
 
 
@@ -149,6 +185,10 @@ public class PersonServices {
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
         //link PUT verb
         dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("disable").withType("PATCH"));
+
+        //methodOn(PersonController.class).findByID(dto.getId()) -> simula a chamada da função mas n executa, apenas pega a assinatura
+        //linkTo(<função>) -> cria um link HATEOAS com a assinatura
+        //withSelfRef -> Adiciona na seção self, indicando que o link retorna á mesma entidade
     }
 
 }

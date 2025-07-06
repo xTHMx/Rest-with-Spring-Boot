@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 
+@Relation(collectionRelation = "People") //Troca o nome exibido no embedding nos requestBody do HATEOAS/HAL
 @JsonPropertyOrder({"id", "firstName", "lastName", "gender", "address"}) //ajusta a ordem dos dados no json e os nomes
 public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
 
