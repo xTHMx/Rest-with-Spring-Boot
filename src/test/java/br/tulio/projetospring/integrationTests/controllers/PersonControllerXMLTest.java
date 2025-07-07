@@ -2,7 +2,9 @@ package br.tulio.projetospring.integrationTests.controllers;
 
 import br.tulio.projetospring.configs.TestConfigs;
 import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
+import br.tulio.projetospring.integrationTests.controllers.paged.PagedModelPerson;
 import br.tulio.projetospring.integrationTests.dto.PersonDTO;
+import br.tulio.projetospring.integrationTests.dto.wrapper.WrapperPersonDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -203,7 +205,8 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
     void findAllTest() throws JsonProcessingException {
 
         var content = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE) //Header param
+                .accept(MediaType.APPLICATION_XML_VALUE)//Header param
+                .queryParams("page", 3, "size", 12, "direction", "asc") //passa os query params da request
                 .when()
                     .get("/all")
                 .then()
@@ -212,7 +215,9 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
                 .extract()
                     .body().asString();
 
-        List<PersonDTO> people = objectMapper.readValue(content, new TypeReference<List<PersonDTO>>(){});
+        PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class); //usa o wrapper pra ler os JSON baseado na sua propriedade _embedded
+        List<PersonDTO> people = wrapper.getContent(); //monta os DTOs usando o outro wrapper pra ler os dados dentro de People
+        //List<PersonDTO> people = objectMapper.readValue(content, new TypeReference<List<PersonDTO>>(){}); //antes de usar HAL
 
         //primeira pessoa da lista
         PersonDTO firstPerson = people.getFirst();
@@ -221,9 +226,9 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
         assertNotNull(firstPerson.getId());
         assertTrue(firstPerson.getId() > 0);
 
-        assertEquals("John", firstPerson.getFirstName());
-        assertEquals("Doe", firstPerson.getLastName());
-        assertEquals("Rua Benedito, 14", firstPerson.getAddress());
+        assertEquals("Allayne", firstPerson.getFirstName()); //dados coletados de um request semelhante e com mesmos parametros
+        assertEquals("Trelevan", firstPerson.getLastName());
+        assertEquals("039 Sage Terrace", firstPerson.getAddress());
         assertEquals("M", firstPerson.getGender());
         assertTrue(firstPerson.getEnabled());
 
@@ -234,11 +239,11 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
         assertNotNull(thirdPerson.getId());
         assertTrue(thirdPerson.getId() > 0);
 
-        assertEquals("Albert", thirdPerson.getFirstName());
-        assertEquals("Eintein", thirdPerson.getLastName());
-        assertEquals("Alexandria, bairro nobre, 223", thirdPerson.getAddress());
-        assertEquals("M", thirdPerson.getGender());
-        assertTrue(thirdPerson.getEnabled());
+        assertEquals("Almeda", thirdPerson.getFirstName());
+        assertEquals("Haugh", thirdPerson.getLastName());
+        assertEquals("178 New Castle Lane", thirdPerson.getAddress());
+        assertEquals("F", thirdPerson.getGender());
+        assertFalse(thirdPerson.getEnabled());
 
         //sexta pessoa
         PersonDTO fifthPerson = people.get(4);
@@ -247,9 +252,9 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
         assertNotNull(fifthPerson.getId());
         assertTrue(fifthPerson.getId() > 0);
 
-        assertEquals("Albert", fifthPerson.getFirstName());
-        assertEquals("Eintein", fifthPerson.getLastName());
-        assertEquals("Alexandria, bairro nobre, 223", fifthPerson.getAddress());
+        assertEquals("Aluin", fifthPerson.getFirstName());
+        assertEquals("McPeake", fifthPerson.getLastName());
+        assertEquals("71938 Del Sol Terrace", fifthPerson.getAddress());
         assertEquals("M", fifthPerson.getGender());
         assertTrue(fifthPerson.getEnabled());
 

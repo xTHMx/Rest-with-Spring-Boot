@@ -3,6 +3,7 @@ package br.tulio.projetospring.integrationTests.controllers;
 import br.tulio.projetospring.configs.TestConfigs;
 import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
 import br.tulio.projetospring.integrationTests.controllers.mappers.YAMLMapper;
+import br.tulio.projetospring.integrationTests.controllers.paged.PagedModelPerson;
 import br.tulio.projetospring.integrationTests.dto.PersonDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.builder.RequestSpecBuilder;
@@ -231,27 +232,28 @@ class PersonControllerYAMLTest extends AbstractIntegrationTest {
                                         .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
                 )
                 .spec(specification)
-                .accept(MediaType.APPLICATION_YAML_VALUE) //Header param
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .queryParams("page", 3, "size", 12, "direction", "asc") //passa os query params da request
+                //Header param
                 .when()
                     .get("/all")
                 .then()
                     .statusCode(200)
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
-                    .body().as(PersonDTO[].class, objectMapper);
+                    .body().as(PagedModelPerson.class, objectMapper);
 
-        List<PersonDTO> people = Arrays.asList(content);
+        List<PersonDTO> people = content.getContent();
 
-        //primeira pessoa da lista
         PersonDTO firstPerson = people.getFirst();
         person = firstPerson;
 
         assertNotNull(firstPerson.getId());
         assertTrue(firstPerson.getId() > 0);
 
-        assertEquals("John", firstPerson.getFirstName());
-        assertEquals("Doe", firstPerson.getLastName());
-        assertEquals("Rua Benedito, 14", firstPerson.getAddress());
+        assertEquals("Allayne", firstPerson.getFirstName()); //dados coletados de um request semelhante e com mesmos parametros
+        assertEquals("Trelevan", firstPerson.getLastName());
+        assertEquals("039 Sage Terrace", firstPerson.getAddress());
         assertEquals("M", firstPerson.getGender());
         assertTrue(firstPerson.getEnabled());
 
@@ -262,11 +264,11 @@ class PersonControllerYAMLTest extends AbstractIntegrationTest {
         assertNotNull(thirdPerson.getId());
         assertTrue(thirdPerson.getId() > 0);
 
-        assertEquals("Albert", thirdPerson.getFirstName());
-        assertEquals("Eintein", thirdPerson.getLastName());
-        assertEquals("Alexandria, bairro nobre, 223", thirdPerson.getAddress());
-        assertEquals("M", thirdPerson.getGender());
-        assertTrue(thirdPerson.getEnabled());
+        assertEquals("Almeda", thirdPerson.getFirstName());
+        assertEquals("Haugh", thirdPerson.getLastName());
+        assertEquals("178 New Castle Lane", thirdPerson.getAddress());
+        assertEquals("F", thirdPerson.getGender());
+        assertFalse(thirdPerson.getEnabled());
 
         //sexta pessoa
         PersonDTO fifthPerson = people.get(4);
@@ -275,9 +277,9 @@ class PersonControllerYAMLTest extends AbstractIntegrationTest {
         assertNotNull(fifthPerson.getId());
         assertTrue(fifthPerson.getId() > 0);
 
-        assertEquals("Albert", fifthPerson.getFirstName());
-        assertEquals("Eintein", fifthPerson.getLastName());
-        assertEquals("Alexandria, bairro nobre, 223", fifthPerson.getAddress());
+        assertEquals("Aluin", fifthPerson.getFirstName());
+        assertEquals("McPeake", fifthPerson.getLastName());
+        assertEquals("71938 Del Sol Terrace", fifthPerson.getAddress());
         assertEquals("M", fifthPerson.getGender());
         assertTrue(fifthPerson.getEnabled());
 
