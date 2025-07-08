@@ -3,6 +3,7 @@ package br.tulio.projetospring.file.importer.impl;
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.file.importer.contract.FileImporter;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,9 @@ public class CsvImporter implements FileImporter {
                 .setTrim(true) //remove espaços antes e depois do valor
                 .build(); //retorna o formato
 
-        Iterable<CSVRecord> records = format.parse(new InputStreamReader(inputStream)); //Pega cada linha da tabela CSV e convertendo em uma lista iterativa de records
+        //Iterable<CSVRecord> records = format.parse(new InputStreamReader(inputStream)); //Pega cada linha da tabela CSV e convertendo em uma lista iterativa de records
+        CSVParser parser = CSVParser.parse(new InputStreamReader(inputStream), format);
+        Iterable<CSVRecord> records = parser.getRecords();
 
         return parseRecordsToPersonDTO(records);
     }

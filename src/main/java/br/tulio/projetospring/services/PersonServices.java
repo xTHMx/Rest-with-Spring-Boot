@@ -79,7 +79,7 @@ public class PersonServices {
     }
 
     //Le arquivo de tabela e converte em Person para o banco de dados
-    public List<PersonDTO> loadFromFile(MultipartFile file) throws Exception {
+    public List<PersonDTO> loadPeopleFromFile(MultipartFile file) {
         logger.info("Loading person from file...");
 
         if(file.isEmpty()) throw new BadRequestException("Please select a valid file");
@@ -101,6 +101,7 @@ public class PersonServices {
                         return dto;
                     })
                     .toList();
+
         } catch (Exception e) {
             throw new FileStorageException("Error while processing file!", e);
         }
@@ -216,6 +217,7 @@ public class PersonServices {
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
         //link POST verb
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(PersonController.class)).slash("loadPeopleFromFile").withRel("loadPeopleFromFile").withType("POST"));
         //link PUT verb
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
         //link PUT verb

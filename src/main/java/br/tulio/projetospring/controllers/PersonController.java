@@ -20,6 +20,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,13 +37,22 @@ public class PersonController implements PersonControllerDocs {
     //@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,          *Não se usa mais (Legado)
     //       produces = MediaType.APPLICATION_JSON_VALUE)
     // @CrossOrigin(origins = "http://localhost:8080") - implementado em nivel global
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
     @Override //override é usado pois a documentação da função está em outra classe para melhor legibilidade
     public PersonDTO create(@RequestBody PersonDTO person) { //@RequestBody faz retornar o body do request
         return services.create(person);
+    }
+
+
+    @PostMapping( value = "/loadPeopleFromFile",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
+    )
+    @Override
+    public List<PersonDTO> loadPeopleFromFile(@RequestParam("file") MultipartFile file) {
+        return services.loadPeopleFromFile(file);
     }
 
 
@@ -96,6 +106,7 @@ public class PersonController implements PersonControllerDocs {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName")); //Sort.by() faz com que o retorno seja ordenado baseado no firsrt name -> ordena primeiro TODOS antes de pegar por pagina
         return ResponseEntity.ok(services.findAll(pageable));
     }
+
 
     @GetMapping(value = "/findByName/{firstName}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
