@@ -1,5 +1,7 @@
 cors: #Config global do CORS - Propriedade manufaturada
   originPatterns: http://localhost:8080,http://localhost:3000
+file:
+  upload-dir: /Documentos/Java/FileDestination
 spring:
   application:
     name : demo
@@ -16,6 +18,12 @@ spring:
         dialect: #org.hibernate.dialect.MySQLDialect - já adiciona sozinho quando vazio
     show-sql: false
     open-in-view: false
+  servlet:
+    multipart:  #transferencia de Arquivos
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
   logging:
       level:
         root: WARN #- Somente exibe logs de warn em pacotes root
