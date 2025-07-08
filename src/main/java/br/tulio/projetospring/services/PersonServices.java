@@ -3,8 +3,12 @@ package br.tulio.projetospring.services;
 import br.tulio.projetospring.controllers.PersonController;
 import br.tulio.projetospring.data.dto.v1.PersonDTO;
 import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
+import br.tulio.projetospring.exception.BadRequestException;
+import br.tulio.projetospring.exception.FileStorageException;
 import br.tulio.projetospring.exception.RequiredObjectIsNullException;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
+import br.tulio.projetospring.file.importer.contract.FileImporter;
+import br.tulio.projetospring.file.importer.factory.FileImporterFactory;
 import br.tulio.projetospring.mapper.custom.PersonMapper;
 import br.tulio.projetospring.models.Person;
 import br.tulio.projetospring.repository.PersonRepository;
@@ -21,6 +25,12 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 
 import static br.tulio.projetospring.mapper.ObjectMapper.parseObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -32,13 +42,16 @@ public class PersonServices {
     private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
 
     @Autowired
-    private PersonRepository repository;
+    PersonRepository repository;
 
     @Autowired
-    private PersonMapper personConverter;
+    PersonMapper personConverter;
 
     @Autowired
-    private PagedResourcesAssembler<PersonDTO> pagedAssembler;
+    FileImporterFactory fileImporter;
+
+    @Autowired
+    PagedResourcesAssembler<PersonDTO> pagedAssembler;
 
     public PersonDTO findByID(Long id) {
         logger.info("Finding one person by ID...");
@@ -63,6 +76,35 @@ public class PersonServices {
         addHateoasLinks(dto);
 
         return dto;
+    }
+
+    //Le arquivo de tabela e converte em Person para o banco de dados
+    public List<PersonDTO> loadFromFile(MultipartFile file) throws Exception {
+        logger.info("Loading person from file...");
+
+        if(file.isEmpty()) throw new BadRequestException("Please select a valid file");
+
+        try (InputStream inputStream = file.getInputStream()){
+            String fileName = Optional.ofNullable(file.getOriginalFilename())
+                    .orElseThrow(() -> new BadRequestException("File name is cannot be null"));
+
+            FileImporter importer = this.fileImporter.getImporter(fileName);
+
+            List<Person> entities = importer.importFile(inputStream).stream() //importer importa um inputStream e retorna list de DTOs que devemos iterar. Pra persistir no banco devemos converter em person -> DTOs nao podem.
+                    .map(dto -> repository.save(parseObject(dto, Person.class))) // iteramos pelos DTOs e convertemos em person já adicionando ao banco
+                    .toList(); //retorna lista de entidades
+
+            return entities.stream()
+                    .map(entity -> { //itera pela lista e converte para DTO + add HATEOAS links
+                        var dto = parseObject(entity, PersonDTO.class);
+                        addHateoasLinks(dto);
+                        return dto;
+                    })
+                    .toList();
+        } catch (Exception e) {
+            throw new FileStorageException("Error while processing file!", e);
+        }
+
     }
 
     public PersonDTO update(PersonDTO person) {
@@ -164,6 +206,7 @@ public class PersonServices {
 
 
     /// HATEOAS
+    //Adiciona links HATEOAS ao DTO
     private void addHateoasLinks(PersonDTO dto) {
         //link GET verb
         dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withSelfRel().withType("GET")); //withSelfRel() diz que referencia o mesmo endpoint
