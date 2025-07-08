@@ -11,6 +11,7 @@ import br.tulio.projetospring.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -118,22 +119,7 @@ public class PersonServices {
 
         var foundPeople = repository.findAll(pageable);
 
-        var peopleWithLinks = foundPeople.map(
-                person -> {
-                    var dto = parseObject(person, PersonDTO.class);
-                    addHateoasLinks(dto);
-                    return dto;
-                });
-
-        //Adicionando links HAL(_links e _embedded) para complementar o HATEOAS
-        Link findAllLink = WebMvcLinkBuilder.linkTo(        //adiciona links adicionais do HAL 'bindando' na função findAll()
-                WebMvcLinkBuilder.methodOn(PersonController.class)
-                        .findAll(pageable.getPageNumber(),
-                                pageable.getPageSize(),
-                                String.valueOf(pageable.getSort())))
-                        .withSelfRel();
-
-        return pagedAssembler.toModel(peopleWithLinks, findAllLink);
+        return buildPagedModel(pageable, foundPeople);
     }
 
     public PagedModel<EntityModel<PersonDTO>> findByName(String firstName, Pageable pageable) {
@@ -141,6 +127,23 @@ public class PersonServices {
 
         var foundPeople = repository.findPeopleByName(firstName, pageable);
 
+        return buildPagedModel(pageable, foundPeople);
+    }
+
+
+    /// v2
+    // Somente para treino de versionamento
+    public PersonDTOV2 createV2(PersonDTOV2 person) {
+        logger.info("Creating a person V2...");
+
+        //o Dozer não iria funcionar aqui, então foi necessario criar um mapper customizado
+        var entity = personConverter.convertDTOToEntity(person);
+
+        return personConverter.convertEntityToDTO(repository.save(entity));
+    }
+
+    //Cria o paged model do personDTO e adiciona os links do HATEOAS e HAL
+    private PagedModel<EntityModel<PersonDTO>> buildPagedModel(Pageable pageable, Page<Person> foundPeople) {
         var peopleWithLinks = foundPeople.map(
                 person -> {
                     var dto = parseObject(person, PersonDTO.class);
@@ -160,23 +163,12 @@ public class PersonServices {
     }
 
 
-    /// v2
-    // Somente para treino de versionamento
-    public PersonDTOV2 createV2(PersonDTOV2 person) {
-        logger.info("Creating a person V2...");
-
-        //o Dozer não iria funcionar aqui, então foi necessario criar um mapper customizado
-        var entity = personConverter.convertDTOToEntity(person);
-
-        return personConverter.convertEntityToDTO(repository.save(entity));
-    }
-
-
     /// HATEOAS
     private void addHateoasLinks(PersonDTO dto) {
         //link GET verb
         dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withSelfRel().withType("GET")); //withSelfRel() diz que referencia o mesmo endpoint
-        dto.add(linkTo(methodOn(PersonController.class).findAll(1, 10, "desc")).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findAll(1, 10, "asc")).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findByName("", 1, 12, "asc")).withSelfRel().withType("GET"));
         //link DELETE verb
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
         //link POST verb
