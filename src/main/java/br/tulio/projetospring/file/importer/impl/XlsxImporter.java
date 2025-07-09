@@ -21,7 +21,6 @@ public class XlsxImporter implements FileImporter {
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             XSSFSheet sheet = workbook.getSheetAt(0); //pega a tabela na posição tal
-
             Iterator<Row> rowIterator = sheet.iterator(); //cria um iterador de tabelas
 
             if(rowIterator.hasNext()){ //pulamos a primeira linha da planilha
@@ -62,6 +61,6 @@ public class XlsxImporter implements FileImporter {
     //Verifica se o Row é valido
     private static boolean isRowValid(Row row) {
         //Se não for null ou vazio
-        return row.getCell(0) != null && row.getCell(0).getCellType() == CellType.BLANK;
+        return row.getCell(0) != null && row.getCell(0).getCellType() != CellType.BLANK;
     }
 }

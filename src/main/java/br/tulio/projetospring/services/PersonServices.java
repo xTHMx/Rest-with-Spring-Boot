@@ -7,6 +7,9 @@ import br.tulio.projetospring.exception.BadRequestException;
 import br.tulio.projetospring.exception.FileStorageException;
 import br.tulio.projetospring.exception.RequiredObjectIsNullException;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
+import br.tulio.projetospring.file.exporter.MediaTypes;
+import br.tulio.projetospring.file.exporter.contract.FileExporter;
+import br.tulio.projetospring.file.exporter.factory.FileExporterFactory;
 import br.tulio.projetospring.file.importer.contract.FileImporter;
 import br.tulio.projetospring.file.importer.factory.FileImporterFactory;
 import br.tulio.projetospring.mapper.custom.PersonMapper;
@@ -15,6 +18,7 @@ import br.tulio.projetospring.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -51,7 +55,11 @@ public class PersonServices {
     FileImporterFactory fileImporter;
 
     @Autowired
+    FileExporterFactory fileExporter;
+
+    @Autowired
     PagedResourcesAssembler<PersonDTO> pagedAssembler;
+
 
     public PersonDTO findByID(Long id) {
         logger.info("Finding one person by ID...");
@@ -77,6 +85,7 @@ public class PersonServices {
 
         return dto;
     }
+
 
     //Le arquivo de tabela e converte em Person para o banco de dados
     public List<PersonDTO> loadPeopleFromFile(MultipartFile file) {
@@ -157,6 +166,7 @@ public class PersonServices {
         return dto;
     }
 
+
     public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("Finding all people...");
 
@@ -165,12 +175,30 @@ public class PersonServices {
         return buildPagedModel(pageable, foundPeople);
     }
 
+
     public PagedModel<EntityModel<PersonDTO>> findByName(String firstName, Pageable pageable) {
-        logger.info("Finding all people...");
+        logger.info("Finding people by name...");
 
         var foundPeople = repository.findPeopleByName(firstName, pageable);
 
         return buildPagedModel(pageable, foundPeople);
+    }
+
+
+    public Resource exportPeoplePage(Pageable pageable, String acceptHeader) {
+        logger.info("Exporting a people page...");
+
+        var people = repository.findAll(pageable)
+                .map(p -> parseObject(p, PersonDTO.class))
+                .getContent();
+
+        try {
+            FileExporter exporter = this.fileExporter.getExporter(acceptHeader);
+            return exporter.exportFile(people);
+
+        }catch (Exception e) {
+            throw new RuntimeException("Error during file export!",e);
+        }
     }
 
 
@@ -213,6 +241,7 @@ public class PersonServices {
         dto.add(linkTo(methodOn(PersonController.class).findByID(dto.getId())).withSelfRel().withType("GET")); //withSelfRel() diz que referencia o mesmo endpoint
         dto.add(linkTo(methodOn(PersonController.class).findAll(1, 10, "asc")).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).findByName("", 1, 12, "asc")).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).exportPage(1, 12, "asc", null)).withRel("exportPage").withType("GET").withTitle("Export People"));
         //link DELETE verb
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
         //link POST verb
