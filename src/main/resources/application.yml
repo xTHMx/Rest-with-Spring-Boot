@@ -2,6 +2,9 @@ cors: #Config global do CORS - Propriedade manufaturada
   originPatterns: http://localhost:8080,http://localhost:3000
 file:
   upload-dir: /Documentos/Java/FileDestination
+email:
+  subject: "Default Subject"
+  message: "Default Message"
 spring:
   application:
     name : demo
@@ -18,6 +21,15 @@ spring:
         dialect: #org.hibernate.dialect.MySQLDialect - já adiciona sozinho quando vazio
     show-sql: false
     open-in-view: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enabled: true
+      mail.smtp.starttls.required: true
   servlet:
     multipart:  #transferencia de Arquivos
       enabled: true
