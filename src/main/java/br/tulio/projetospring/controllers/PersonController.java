@@ -1,20 +1,14 @@
 package br.tulio.projetospring.controllers;
 
 import br.tulio.projetospring.controllers.docs.PersonControllerDocs;
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
-import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
+import br.tulio.projetospring.data.dto.person.v2.PersonDTOV2;
 import br.tulio.projetospring.file.exporter.MediaTypes;
 import br.tulio.projetospring.services.PersonServices;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

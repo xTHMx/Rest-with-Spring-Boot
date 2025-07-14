@@ -1,7 +1,7 @@
 package br.tulio.projetospring.controllers.docs;
 
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
-import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
+import br.tulio.projetospring.data.dto.person.v2.PersonDTOV2;
 import br.tulio.projetospring.file.exporter.MediaTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

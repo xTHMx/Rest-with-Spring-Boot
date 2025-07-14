@@ -1,6 +1,6 @@
 package br.tulio.projetospring.unitetest.services.services;
 
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
 import br.tulio.projetospring.exception.RequiredObjectIsNullException;
 import br.tulio.projetospring.models.Person;
 import br.tulio.projetospring.repository.PersonRepository;
@@ -15,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;

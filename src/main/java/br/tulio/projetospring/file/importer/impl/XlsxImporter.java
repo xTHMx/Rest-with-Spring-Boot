@@ -1,6 +1,6 @@
 package br.tulio.projetospring.file.importer.impl;
 
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
 import br.tulio.projetospring.file.importer.contract.FileImporter;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;

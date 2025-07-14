@@ -1,6 +1,6 @@
 package br.tulio.projetospring.file.importer.contract;
 
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
 
 import java.io.InputStream;
 import java.util.List;

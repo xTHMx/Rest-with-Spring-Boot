@@ -1,6 +1,6 @@
 package br.tulio.projetospring.controllers.docs;
 
-import br.tulio.projetospring.data.dto.v1.UploadFileResponseDTO;
+import br.tulio.projetospring.data.dto.person.UploadFileResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

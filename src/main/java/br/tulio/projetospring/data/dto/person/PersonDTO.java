@@ -1,4 +1,4 @@
-package br.tulio.projetospring.data.dto.v1;
+package br.tulio.projetospring.data.dto.person;
 
 import br.tulio.projetospring.tools.serializers.GenderSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,8 +1,7 @@
 package br.tulio.projetospring.mapper.custom;
 
-import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
+import br.tulio.projetospring.data.dto.person.v2.PersonDTOV2;
 import br.tulio.projetospring.models.Person;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

@@ -1,6 +1,6 @@
 package br.tulio.projetospring.unitetest.mapper.mocks;
 
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
 import br.tulio.projetospring.models.Person;
 
 import java.util.ArrayList;

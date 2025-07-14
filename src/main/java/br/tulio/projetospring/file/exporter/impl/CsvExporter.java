@@ -1,6 +1,6 @@
 package br.tulio.projetospring.file.exporter.impl;
 
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
 import br.tulio.projetospring.file.exporter.contract.FileExporter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;

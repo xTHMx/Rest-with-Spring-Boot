@@ -1,13 +1,12 @@
 package br.tulio.projetospring.services;
 
 import br.tulio.projetospring.controllers.PersonController;
-import br.tulio.projetospring.data.dto.v1.PersonDTO;
-import br.tulio.projetospring.data.dto.v2.PersonDTOV2;
+import br.tulio.projetospring.data.dto.person.PersonDTO;
+import br.tulio.projetospring.data.dto.person.v2.PersonDTOV2;
 import br.tulio.projetospring.exception.BadRequestException;
 import br.tulio.projetospring.exception.FileStorageException;
 import br.tulio.projetospring.exception.RequiredObjectIsNullException;
 import br.tulio.projetospring.exception.ResourceNotFoundException;
-import br.tulio.projetospring.file.exporter.MediaTypes;
 import br.tulio.projetospring.file.exporter.contract.FileExporter;
 import br.tulio.projetospring.file.exporter.factory.FileExporterFactory;
 import br.tulio.projetospring.file.importer.contract.FileImporter;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;

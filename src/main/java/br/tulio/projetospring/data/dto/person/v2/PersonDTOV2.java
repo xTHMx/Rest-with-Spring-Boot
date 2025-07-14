@@ -1,4 +1,4 @@
-package br.tulio.projetospring.data.dto.v2;
+package br.tulio.projetospring.data.dto.person.v2;
 
 import java.io.Serializable;
 import java.util.Date;

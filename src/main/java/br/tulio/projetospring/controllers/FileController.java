@@ -1,7 +1,7 @@
 package br.tulio.projetospring.controllers;
 
 import br.tulio.projetospring.controllers.docs.FileControllerDocs;
-import br.tulio.projetospring.data.dto.v1.UploadFileResponseDTO;
+import br.tulio.projetospring.data.dto.person.UploadFileResponseDTO;
 import br.tulio.projetospring.services.FileStorageServices;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
