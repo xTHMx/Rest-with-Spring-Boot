@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.hateoas.EntityModel;
@@ -19,10 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Tag( name = "People Endpoint", description = "End-points for Managing People")
 public interface PersonControllerDocs {
 
     @Operation(summary = "Adds a New Person",
-            description = "Adds a new person by passing a JSON, XML or YAML with its data", tags = {"People"},
+            description = "Adds a new person by passing a JSON, XML or YAML with its data",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PersonDTO.class)
@@ -37,7 +40,8 @@ public interface PersonControllerDocs {
 
 
     @Operation(summary = "Load People from a uploaded sheet ",
-            description = "Load People from a upload .csv or .xlsx sheet and convert directly into DTOs", tags = {"People"},
+            description = "Load People from a upload .csv or .xlsx sheet and convert directly into DTOs",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
                             content = @Content( schema = @Schema(implementation = PersonDTO.class))
@@ -53,7 +57,8 @@ public interface PersonControllerDocs {
 
 
     @Operation(summary = "Finds a Person",
-            description = "Finds a specific person by given ID", tags = {"People"},
+            description = "Finds a specific person by given ID",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PersonDTO.class)
@@ -70,7 +75,7 @@ public interface PersonControllerDocs {
 
     @Operation(summary = "Updates a Person",
             description = "Updates a specific person by given ID. New data must be passed as JSON, XML or YAML following the class structure.",
-            tags = {"People"},
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PersonDTO.class)
@@ -86,7 +91,7 @@ public interface PersonControllerDocs {
 
     @Operation(summary = "Disable a Person",
             description = "Disable a specific person by given ID.",
-            tags = {"People"},
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PersonDTO.class)
@@ -101,7 +106,8 @@ public interface PersonControllerDocs {
     PersonDTO disablePerson(@PathVariable("id") Long id);
 
     @Operation(summary = "Deletes a Specific Person",
-            description = "Deletes a specific person by their ID", tags = {"People"},
+            description = "Deletes a specific person by their ID",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content),
                     @ApiResponse(description = "No Context", responseCode = "204", content = @Content),
@@ -114,7 +120,8 @@ public interface PersonControllerDocs {
     ResponseEntity<?> delete(@PathVariable("id") Long id);
 
     @Operation(summary = "Finds All People",
-            description = "Finds All People", tags = {"People"},
+            description = "Finds All People",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -134,7 +141,8 @@ public interface PersonControllerDocs {
     );
 
     @Operation(summary = "Finds a Person by Name",
-            description = "Finds a Person by Name", tags = {"People"},
+            description = "Finds a Person by Name",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -157,7 +165,8 @@ public interface PersonControllerDocs {
 
 
     @Operation(summary = "Export People",
-            description = "Exports a page of People in .xlsx or .csv format", tags = {"People"},
+            description = "Exports a page of People in .xlsx or .csv format",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = {
                             @Content(mediaType = MediaTypes.APPLICATION_XLSX_VALUE),
@@ -179,7 +188,8 @@ public interface PersonControllerDocs {
 
 
     @Operation(summary = "Adds a New Person with V2 values",
-            description = "Adds a new person by passing a JSON, XML or YAML with its data. Uses V2 DTO model", tags = {"People"},
+            description = "Adds a new person by passing a JSON, XML or YAML with its data. Uses V2 DTO model",
+            //tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PersonDTO.class)

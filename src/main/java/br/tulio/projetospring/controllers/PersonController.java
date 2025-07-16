@@ -25,7 +25,7 @@ import java.util.List;
 //@CrossOrigin(origins = "http//localhost:8080") //Não implementei a nivel de controller
 @RestController
 @RequestMapping("/people")
-@Tag(name = "People", description = "End-points for Managing People") //Mark as swagger tag for documentation
+//@Tag(name = "People", description = "End-points for Managing People") //Mark as swagger tag for documentation
 public class PersonController implements PersonControllerDocs {
 
     @Autowired

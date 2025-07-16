@@ -4,6 +4,11 @@ cors:
   originPatterns: http://localhost:8888,http://localhost:3000
 file:
   upload-dir: /Documentos/Java/FileDestination
+security:
+  jwt:
+    token:
+      secret-key: 53cr37
+      expire-lenght: 3600000 # 1 hora
 spring:
   application:
     name : demo
