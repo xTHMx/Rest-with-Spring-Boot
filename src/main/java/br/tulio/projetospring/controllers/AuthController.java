@@ -41,10 +41,13 @@ public class AuthController implements AuthControllerDocs {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Client Request: Invalid Token");
         }
 
-        return ResponseEntity.ok().body(token);
+        //return ResponseEntity.ok().body(token); //monta uma resposta com header, body (com o nosso token nele) e status code 200
+        return token; //mas precisamos retornar somente o token
     }
 
-    @PutMapping("/refresh/{username}")
+    @PutMapping(value = "/refresh/{username}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
     @Override
     public ResponseEntity<?> refreshToken(@PathVariable("username") String userName, @RequestHeader("Authorization") String refreshToken) {
         if(parametersAreInvalid(userName, refreshToken)){

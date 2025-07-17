@@ -2,17 +2,17 @@ package br.tulio.projetospring.integrationTests.controllers;
 
 import br.tulio.projetospring.configs.TestConfigs;
 import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
+import br.tulio.projetospring.integrationTests.controllers.mappers.YAMLMapper;
 import br.tulio.projetospring.integrationTests.controllers.paged.PagedModelPerson;
 import br.tulio.projetospring.integrationTests.dto.PersonDTO;
-import br.tulio.projetospring.integrationTests.dto.wrapper.WrapperPersonDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.EncoderConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,19 +26,18 @@ import static junit.framework.TestCase.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerXMLTest extends AbstractIntegrationTest {
+class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
-    private static XmlMapper objectMapper; //ObjectMapper padrão serializa em JSON, então usamos esse
+    private static YAMLMapper objectMapper;
 
     private static PersonDTO person;
 
     @BeforeAll //faz o setup antes de tudo
     static void setUp() {  //por isso precisa ser estatico
-        objectMapper = new XmlMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
+        objectMapper = new YAMLMapper();
         person = new PersonDTO();
+
     }
 
     @Test
@@ -54,19 +53,23 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE) //Header param
-                .accept(MediaType.APPLICATION_XML_VALUE)      //Header param para receber rm XML
-                .body(person)                                  //header param
+        var createdPerson = given().config(
+                    RestAssuredConfig.config()
+                            .encoderConfig(EncoderConfig.encoderConfig()
+                                    .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                    )
+                .spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE) //Header param
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .body(person, objectMapper)                                  //header param
                 .when()
                     .post()
                 .then()
                     .statusCode(200)
-                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
-                    .body().asString();
+                    .body().as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -91,19 +94,23 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
     void updateTest() throws JsonProcessingException {
         person.setLastName("Manacero jr.");
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE) //Header param
-                .accept(MediaType.APPLICATION_XML_VALUE)      //Header param para receber rm XML
-                .body(person)                            //header param
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                )
+                .spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE) //Header param
+                .accept(MediaType.APPLICATION_YAML_VALUE)      //Header param para receber em JSON
+                .body(person, objectMapper)                            //header param
                 .when()
                     .put()
                 .then()
                     .statusCode(200)
-                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
-                    .body().asString();
+                    .body().as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -127,19 +134,23 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
 
         //Não precisa de outra 'specification' já que n tem CORS e n vai alterar nada
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE) //Header param
-                .accept(MediaType.APPLICATION_XML_VALUE)      //Header param para receber rm XML
-                .pathParams("id", person.getId())           //header param
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                )
+                .spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE) //Header param
+                .accept(MediaType.APPLICATION_YAML_VALUE)      //Header param para receber em JSON
+                .pathParams("id", person.getId())                             //header param
                 .when()
                     .get("{id}")
                 .then()
                     .statusCode(200)
-                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
-                    .body().asString();
+                    .body().as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -159,17 +170,22 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
     @Order(4)
     void disableTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)      //Header param para receber rm XML
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                )
+                .spec(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)      //Header param para receber em JSON
+                .contentType(MediaType.APPLICATION_YAML_VALUE) //Header param
                 .pathParams("id", person.getId())                             //header param
                 .when()
                     .patch("{id}")
                 .then()
                     .statusCode(200)
                 .extract()
-                    .body().asString();
+                    .body().as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -189,8 +205,13 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
     @Order(5)
     void deleteTest() throws JsonProcessingException {
 
-        given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)      //Header param para receber rm XML
+        given().config(
+                RestAssuredConfig.config()
+                        .encoderConfig(EncoderConfig.encoderConfig()
+                                .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                )
+                .spec(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)      //Header param para receber em JSON
                 .pathParams("id", person.getId())                             //header param
                 .when()
                     .delete("{id}")
@@ -204,22 +225,25 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
     @Order(6)
     void findAllTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)//Header param
+        var content = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(EncoderConfig.encoderConfig()
+                                        .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                )
+                .spec(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                 .queryParams("page", 3, "size", 12, "direction", "asc") //passa os query params da request
+                //Header param
                 .when()
                     .get("/all")
                 .then()
                     .statusCode(200)
-                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
-                    .body().asString();
+                    .body().as(PagedModelPerson.class, objectMapper);
 
-        PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class); //usa o wrapper pra ler os JSON baseado na sua propriedade _embedded
-        List<PersonDTO> people = wrapper.getContent(); //monta os DTOs usando o outro wrapper pra ler os dados dentro de People
-        //List<PersonDTO> people = objectMapper.readValue(content, new TypeReference<List<PersonDTO>>(){}); //antes de usar HAL
+        List<PersonDTO> people = content.getContent();
 
-        //primeira pessoa da lista
         PersonDTO firstPerson = people.getFirst();
         person = firstPerson;
 

@@ -5,7 +5,6 @@ import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
 import br.tulio.projetospring.integrationTests.dto.PersonDTO;
 import br.tulio.projetospring.integrationTests.dto.wrapper.WrapperPersonDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.RequestSpecBuilder;
@@ -25,7 +24,7 @@ import static junit.framework.TestCase.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerJSONTest extends AbstractIntegrationTest {
+class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;

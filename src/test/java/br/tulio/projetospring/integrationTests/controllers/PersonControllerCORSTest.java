@@ -49,7 +49,7 @@ class PersonControllerCORSTest extends AbstractIntegrationTest {
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-        var content = given(specification)
+        var content = given(specification)                     //inicia uma requisição HTTP
                 .contentType(MediaType.APPLICATION_JSON_VALUE) //Header param
                 .body(person)                                  //header param
                 .when()
