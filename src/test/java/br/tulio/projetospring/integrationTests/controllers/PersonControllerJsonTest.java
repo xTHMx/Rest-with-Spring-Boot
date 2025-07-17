@@ -2,7 +2,9 @@ package br.tulio.projetospring.integrationTests.controllers;
 
 import br.tulio.projetospring.configs.TestConfigs;
 import br.tulio.projetospring.integrationTests.AbstractIntegrationTest;
+import br.tulio.projetospring.integrationTests.dto.AccountCredentialsDTO;
 import br.tulio.projetospring.integrationTests.dto.PersonDTO;
+import br.tulio.projetospring.integrationTests.dto.TokenDTO;
 import br.tulio.projetospring.integrationTests.dto.wrapper.WrapperPersonDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertNotNull;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -30,6 +33,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
     private static ObjectMapper objectMapper;
 
     private static PersonDTO person;
+    private static TokenDTO token;
 
     @BeforeAll //faz o setup antes de tudo
     static void setUp() {  //por isso precisa ser estatico
@@ -37,6 +41,29 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         person = new PersonDTO();
+        token = new TokenDTO();
+    }
+
+    @Test
+    @Order(1)
+    void signIn() { //Devido a alteração na parte de segurança do codigo é necessario fazer login para fazer o resto
+        AccountCredentialsDTO credentials = new AccountCredentialsDTO("leandro", "admin123");
+
+        token = given()                               //inicia uma requisição HTTP
+                .basePath("/auth/signin")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(credentials)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body().as(TokenDTO.class)
+        ;
+
+        assertNotNull(token.getAccessToken());
+        assertNotNull(token.getRefreshToken());
     }
 
     @Test
@@ -46,6 +73,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
 
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.VALID_ORIGIN)
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + token.getAccessToken())
                 .setBasePath("/people")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
