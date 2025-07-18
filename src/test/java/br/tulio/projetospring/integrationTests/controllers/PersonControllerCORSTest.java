@@ -64,7 +64,7 @@ class PersonControllerCORSTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     void createTest() throws JsonProcessingException {
         mockPerson(); //passa dados ao person criado no setUp()
 
@@ -108,7 +108,7 @@ class PersonControllerCORSTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     void createWithInvalidOriginTest() {
         mockPerson(); //passa dados ao person criado no setUp()
 
@@ -136,7 +136,7 @@ class PersonControllerCORSTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void findByIDTest() throws JsonProcessingException {
         //não precisa do mock pois foi criado anteriormente
         //por isso existe uma ordem
@@ -180,7 +180,7 @@ class PersonControllerCORSTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void findByIDWithInvalidOriginTest() {
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.INVALID_ORIGIN)

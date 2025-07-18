@@ -1,7 +1,7 @@
-server:         # Não se esqueça que essa parte é fora da seção do Spring
+server:          # Não se esqueça que essa parte é fora da seção do Spring
   port: 8888
 cors:
-  originPatterns: http://localhost:8888,http://localhost:3000
+  originPatterns: http://localhost:8080,http://localhost:8888,http://localhost:80,http://localhost:3000
 file:
   upload-dir: /Documentos/Java/FileDestination
 security:

@@ -1,7 +1,7 @@
-server:
-  port: 80
+server:           # Não se esqueça que essa parte é fora da seção do Spring
+  port: 80        # 8080 para local e 80 para docker
 cors: #Config global do CORS - Propriedade manufaturada
-  originPatterns: http://localhost:8080,http://localhost:3000
+  originPatterns: http://localhost:8080,http://localhost:3000,http://localhost:80 #Adicione a url da api no docker (80), senão terá erro de autenticação
 file:
   upload-dir: /Documentos/Java/FileDestination
 email:
