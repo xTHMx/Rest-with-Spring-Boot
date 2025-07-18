@@ -253,10 +253,10 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
         assertTrue(firstPerson.getId() > 0);
 
         assertEquals("Allayne", firstPerson.getFirstName()); //dados coletados de um request semelhante e com mesmos parametros
-        assertEquals("Trelevan", firstPerson.getLastName());
-        assertEquals("039 Sage Terrace", firstPerson.getAddress());
+        assertEquals("Hallwell", firstPerson.getLastName());
+        assertEquals("0 Debs Terrace", firstPerson.getAddress());
         assertEquals("M", firstPerson.getGender());
-        assertTrue(firstPerson.getEnabled());
+        assertFalse(firstPerson.getEnabled());
 
         //quarta pessoa
         PersonDTO thirdPerson = people.get(2);
@@ -265,10 +265,10 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
         assertNotNull(thirdPerson.getId());
         assertTrue(thirdPerson.getId() > 0);
 
-        assertEquals("Almeda", thirdPerson.getFirstName());
-        assertEquals("Haugh", thirdPerson.getLastName());
-        assertEquals("178 New Castle Lane", thirdPerson.getAddress());
-        assertEquals("F", thirdPerson.getGender());
+        assertEquals("Allister", thirdPerson.getFirstName());
+        assertEquals("Garber", thirdPerson.getLastName());
+        assertEquals("4350 Fair Oaks Alley", thirdPerson.getAddress());
+        assertEquals("M", thirdPerson.getGender());
         assertFalse(thirdPerson.getEnabled());
 
         //sexta pessoa
@@ -278,10 +278,10 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
         assertNotNull(fifthPerson.getId());
         assertTrue(fifthPerson.getId() > 0);
 
-        assertEquals("Aluin", fifthPerson.getFirstName());
-        assertEquals("McPeake", fifthPerson.getLastName());
-        assertEquals("71938 Del Sol Terrace", fifthPerson.getAddress());
-        assertEquals("M", fifthPerson.getGender());
+        assertEquals("Aloisia", fifthPerson.getFirstName());
+        assertEquals("McAvinchey", fifthPerson.getLastName());
+        assertEquals("25 Cambridge Crossing", fifthPerson.getAddress());
+        assertEquals("F", fifthPerson.getGender());
         assertTrue(fifthPerson.getEnabled());
 
     }
