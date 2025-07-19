@@ -4,11 +4,11 @@ services:
     #command: mysqld --default_authentication_plugin=mysql_native_password #não se existe mais
     restart: always
     environment:
-        TZ: America/Sao_Paulo
-        MYSQL_ROOT_PASSWORD: minha_senha  #A senha deve ser igual ao do banco, senão da erro de conexão jdbc
-        MYSQL_USER: docker
-        MYSQL_PASSWORD: minha_senha
-        MYSQL_DATABASE: projeto_spring
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: 47190Tulio  #A senha deve ser igual ao do banco, senão da erro de conexão jdbc
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: 47190Tulio
+      MYSQL_DATABASE: projeto_spring
     ports:
       - "3308:3306"
     expose:       #força uma porta a estar exposta
