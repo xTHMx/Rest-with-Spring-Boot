@@ -5,9 +5,9 @@ services:
     restart: always
     environment:
         TZ: America/Sao_Paulo
-        MYSQL_ROOT_PASSWORD: 47190Tulio  #A senha deve ser igual ao do banco, senão da erro de conecção jdbcz'
+        MYSQL_ROOT_PASSWORD: minha_senha  #A senha deve ser igual ao do banco, senão da erro de conexão jdbc
         MYSQL_USER: docker
-        MYSQL_PASSWORD: 47190Tulio
+        MYSQL_PASSWORD: minha_senha
         MYSQL_DATABASE: projeto_spring
     ports:
       - "3308:3306"
@@ -18,7 +18,7 @@ services:
   api-spring:                 #Minha API
     image: xthx/projeto-spring-boot
     restart: always
-    build: ./Projeto Spring Boot #Diz para que seja buildado por esse diretorio -> gera a docker image
+    build: . #Diz para que seja buildado por esse diretorio -> gera a docker image | "." representa o local desse arquivo (ex. ./Projeto Spring Boot)
     #working_dir: 'D:\Documentos\Java\Projeto Spring Boot'
     command: mvn spring-boot:run
     environment:
@@ -35,4 +35,3 @@ services:
 networks:
   projeto-network:
     driver: bridge
-
