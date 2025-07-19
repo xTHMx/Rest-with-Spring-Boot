@@ -1,6 +1,6 @@
 name: Continuos Integration and Delivery with GithubActions
 
-on:
+on:          #trigger para fazer os jobs
   push:
     branches: [ "master" ]
 
@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4  #Cada bloco desses é um step
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -16,8 +16,24 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-    - uses: actions/setup-java@v4
+    - name: Setup Java SDK
+      uses: actions/setup-java@v2
       with:
         java-version: '21'
-        distribution: 'temurin'
+        distribution: 'adopt'
         cache: maven
+
+    - name: Build Application .jar
+      #working-directory:         /Diretorio/A/Partir/Do/.github/QueTemO/pom_xml (caso precise escolher um diretorio, para montar e rodar)
+      run: mvn clean package
+
+    - name: Docker Compose build
+      #working-directory:
+      run: docker compose build
+
+    - name: Push to Docker Hub Container Registry
+      run: |        # "|" permite adicionar mais de um comando, permitindo espaços entre eles
+        docker tag ${{ secrets.DOCKER_USERNAME }}/projeto-spring-boot:latest ${{ secrets.DOCKER_USERNAME }}/projeto-spring-boot:${{ github.run_id }}
+        
+        docker push ${{ secrets.DOCKER_USERNAME }}/projeto-spring-boot:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/projeto-spring-boot:${{ github.run_id }}
