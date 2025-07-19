@@ -2,12 +2,12 @@ package br.tulio.projetospring.configs;
 
 public interface TestConfigs {
 
-    int SERVER_PORT = 8888;   //Se trocar pra 80 (porta aberta pelo docker compose) e tiver a api subida no docker junto com um container do sql,
+    int SERVER_PORT = 80;   //Se trocar pra 80 (porta aberta pelo docker compose) e tiver a api subida no docker junto com um container do sql,
                             // as requisições aparecem no log do docker da api
     String HEADER_PARAM_AUTHORIZATION = "Authorization";
     String HEADER_PARAM_ORIGIN = "Origin";
 
-    String VALID_ORIGIN = "http://localhost:8888"; //"http://localhost:8888"; (Sem estar no docker)
+    String VALID_ORIGIN = "http://localhost:80"; //"http://localhost:8888"; (Sem estar no docker)
     String INVALID_ORIGIN = "http://www.siteficticio.com";
 }
 
