@@ -25,7 +25,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${EMAIL_USERNAME}
+    username: ${EMAIL_USERNAME} # ${var..} Variaveis de Ambiente do OS
     password: ${EMAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
